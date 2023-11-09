@@ -261,13 +261,69 @@ void processPacket(u_char *arg, const struct pcap_pkthdr *pkthdr, const u_char *
 
         if(size_payload  > 0) {
             char* http_request = (char*) payload;
-            printf("%s",http_request);
-             if(strncmp(http_request,"GET",4) == 0 ||
-               strncmp(http_request,"POST",5) == 0  ||
-               strncmp(http_request,"PUT",4) == 0 ||
-               strncmp(http_request,"DELETE",7) == 0 
+            char* method;
+            char* url;
+            char* version;
+            char* host_line;
+            char* host;
+            char* user_agent_line; 
+            char* user_agent;
+            char* buff;
+            const char *separator = ": ";
+            int lenght;
+            //printf("%s",http_request);
+             if(strncmp(http_request,"GET",3) == 0 ||
+               strncmp(http_request,"POST",4) == 0  ||
+               strncmp(http_request,"PUT",3) == 0 ||
+               strncmp(http_request,"DELETE",6) == 0 
              ) {
-                printf("HTTP request : %s",http_request);
+                //printf("HTTP request : %s",http_request);
+                method = strtok(http_request, " ");
+                url = strtok(NULL, " ");
+                version = strtok(NULL, "\r\n");
+                host_line = strtok(NULL, "\r\n\n");
+                user_agent_line = strtok(NULL, "\r\n\n");
+                
+
+                printf("Metodo: %s\n", method);
+                printf("URL: %s\n", url);
+                printf("Versione del protocollo: %s\n", version);
+                //printf("%s\n", host_line);
+
+                 host = strstr(host_line, separator);
+                 if (host != NULL) {
+                 host += strlen(separator);
+                 printf("Host : %s\n", host);
+                printf("Result : %s%s\n", host,url);
+                 
+                 } else {
+                  printf("Separator not found\n");
+                }
+                //printf("%s\n", user_agent_line);
+                
+                 /*user_agent = strstr(user_agent_line, separator);
+                 if (user_agent != NULL) {
+                 user_agent += strlen(separator);
+                 printf("User Agent %s\n", user_agent);
+                 } else {
+                  printf("Separator not found\n");
+                }*/
+              /* length = strlen(host) + strlen(url) + 1; 
+               char * result= malloc(lenght);
+               strcpy(result, host);  
+               strcat(result, url);  // 
+
+                printf("Result : %s\n", result);
+                if (result != NULL) {
+                strcpy(result, host);
+                strcat(result, url);
+                printf("Result: %s\n", result);
+                free(result); // Assicurati di liberare la memoria allocata dinamicamente dopo averla utilizzata
+                } else {
+                printf("Errore nell'allocazione di memoria per result\n");
+                }
+                printf("---------------------------------------------------");
+                */
              }
         }
     }
