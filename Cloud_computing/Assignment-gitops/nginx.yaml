@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 2 # run two replicas of the following template
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: harbor.crownlabs.polito.it/proxy/nginxdemos/hello:0.3-plain-text
+        ports:
+        - name: http
+          containerPort: 80
